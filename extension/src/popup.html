@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Cursor Control</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --ink: #f4efe6;
+        --muted: #b7aa9a;
+        --line: rgba(244, 239, 230, 0.14);
+        --orange: #ff5c1c;
+        --lime: #c6f25a;
+        --danger: #ffb4a2;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        width: 320px;
+        color: var(--ink);
+        font-family: Palatino, "Palatino Linotype", "Iowan Old Style", Georgia, serif;
+        background:
+          radial-gradient(120px 80px at 100% 0%, rgba(255, 92, 28, 0.22), transparent 70%),
+          linear-gradient(180deg, #2a241e 0%, #16130f 42%, #100e0c 100%);
+      }
+      main { padding: 16px 16px 14px; }
+      header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+      .mark {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background:
+          linear-gradient(145deg, rgba(255, 255, 255, 0.08), transparent 40%),
+          #1a1714;
+        box-shadow: inset 0 0 0 1px rgba(244, 239, 230, 0.12);
+        position: relative;
+      }
+      .mark::before {
+        content: "";
+        position: absolute;
+        left: 8px;
+        top: 7px;
+        border-style: solid;
+        border-width: 0 0 16px 11px;
+        border-color: transparent transparent transparent var(--orange);
+        transform: rotate(8deg);
+      }
+      .mark::after {
+        content: "";
+        position: absolute;
+        right: 7px;
+        bottom: 7px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--lime);
+      }
+      p { margin: 0; }
+      .eyebrow {
+        margin: 2px 0 0;
+        color: var(--muted);
+        font: 600 10px/1.2 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+      h1 { margin: 4px 0 0; font-size: 22px; font-weight: 700; letter-spacing: -0.03em; }
+      .lamp {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 14px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .lamp i {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--muted);
+        display: block;
+      }
+      .lamp.paired i { background: var(--lime); box-shadow: 0 0 0 3px rgba(198, 242, 90, 0.16); }
+      .lamp.challenge i { background: var(--orange); }
+      .lamp.rejected i, .lamp.disconnected i { background: var(--danger); }
+      .code {
+        margin: 12px 0 10px;
+        padding: 12px 10px;
+        text-align: center;
+        font: 600 28px/1 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+        letter-spacing: 0.14em;
+        background: rgba(0, 0, 0, 0.28);
+        border-radius: 12px;
+        box-shadow: inset 0 0 0 1px var(--line);
+      }
+      .hint { color: var(--muted); font-size: 13px; line-height: 1.4; }
+      button {
+        appearance: none;
+        width: 100%;
+        border: 0;
+        border-radius: 12px;
+        padding: 11px 12px;
+        cursor: pointer;
+        font: 700 14px/1 Palatino, "Palatino Linotype", Georgia, serif;
+      }
+      button:disabled { cursor: default; opacity: 0.45; }
+      .primary { background: var(--orange); color: #1a120d; }
+      #arm { margin-top: 8px; }
+      .ghost {
+        margin-top: 8px;
+        background: transparent;
+        color: var(--ink);
+        box-shadow: inset 0 0 0 1px var(--line);
+      }
+      .tabs { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 8px; }
+      .tabs li {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+        align-items: center;
+        padding-top: 8px;
+        border-top: 1px solid var(--line);
+      }
+      .tabs strong { display: block; font-size: 14px; }
+      .tabs span {
+        color: var(--muted);
+        font: 11px/1.3 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+      }
+      .tabs button { width: auto; padding: 8px 10px; background: var(--orange); color: #1a120d; font-size: 12px; }
+      .error { min-height: 1.2em; margin-top: 8px; color: var(--danger); font-size: 12px; }
+      footer { margin-top: 12px; color: var(--muted); font-size: 12px; line-height: 1.4; }
+      @media (prefers-reduced-motion: no-preference) {
+        .code { animation: rise 180ms ease-out; }
+      }
+      @keyframes rise {
+        from { opacity: 0; transform: translateY(4px); }
+        to { opacity: 1; transform: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <p class="eyebrow">Local control</p>
+          <h1>Cursor</h1>
+        </div>
+        <div class="mark" aria-hidden="true"></div>
+      </header>
+      <p class="lamp" id="lamp"><i></i><span id="status">Connecting</span></p>
+      <section id="pair" hidden>
+        <p class="code" id="code">----</p>
+        <p class="hint">Match this code with Cursor, then approve it here.</p>
+        <button class="primary" id="approve" type="button">Approve pairing</button>
+      </section>
+      <section>
+        <p class="hint" id="active"></p>
+        <button class="primary" id="arm" type="button">Arm this tab</button>
+        <ul class="tabs" id="tabs"></ul>
+        <button class="ghost" id="disconnect" type="button" hidden>Disconnect</button>
+        <p class="error" id="error" role="status"></p>
+      </section>
+      <footer>Cursor can act only on armed tabs. Stop cuts that off immediately.</footer>
+    </main>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "cursor-browser-server",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.20.2",
+    "ws": "^8.18.3",
+    "zod": "^3.25.76"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "cursor-control-extension",
+  "private": true,
+  "scripts": {
+    "build": "node build.mjs",
+    "build:e2e": "node build.mjs --e2e"
+  }
+}

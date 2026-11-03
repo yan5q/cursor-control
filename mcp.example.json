@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "cursor-browser": {
+      "command": "node",
+      "args": ["REPLACE_WITH_ABSOLUTE_PATH/server/dist/index.js"]
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "cursor-control",
+  "private": true,
+  "workspaces": [
+    "server",
+    "extension"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace server && npm run build --workspace extension",
+    "test": "tsx --test shared/url.test.ts extension/src/snapshot.test.ts extension/src/keys.test.ts server/src/bridge.test.ts server/src/tools.test.ts server/src/stale.test.ts",
+    "typecheck": "tsc --noEmit",
+    "start": "npm run start --workspace server",
+    "e2e": "npm run build --workspace server && npm run build:e2e --workspace extension && tsx scripts/e2e.ts"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.1.24",
+    "@types/node": "^24.9.1",
+    "@types/ws": "^8.18.1",
+    "esbuild": "^0.25.11",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}

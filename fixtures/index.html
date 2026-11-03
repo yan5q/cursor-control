@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Cursor Control Fixture</title>
+  </head>
+  <body>
+    <h1>Fixture</h1>
+    <label for="name">Name</label>
+    <input id="name" name="name" />
+    <button id="go" type="button">Press me</button>
+    <p id="out"></p>
+    <a id="next" href="next.html">Next page</a>
+    <script>
+      document.getElementById("go").addEventListener("click", () => {
+        const name = document.getElementById("name").value;
+        document.getElementById("out").textContent = "clicked:" + name;
+      });
+    </script>
+  </body>
+</html>

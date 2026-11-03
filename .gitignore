@@ -1,0 +1,6 @@
+node_modules/
+dist/
+extension/dist/
+extension/dist-e2e/
+*.log
+.DS_Store
